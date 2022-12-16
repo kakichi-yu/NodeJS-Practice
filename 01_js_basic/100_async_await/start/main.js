@@ -19,5 +19,4 @@ async function init(){
     } catch (e) {
         console.log("catch",e)
     }
-
 }
