@@ -1,0 +1,19 @@
+{
+  "name": "npm-script",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node main.js",
+    "start": "live-server.cmd index.html --port=3000"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": "",
+  "dependencies": {
+    "is-odd": "^3.0.1",
+    "lib-prj": "file:../lib-prj"
+  }
+}
