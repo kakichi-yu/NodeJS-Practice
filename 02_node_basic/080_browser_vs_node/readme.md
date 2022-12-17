@@ -11,7 +11,7 @@
   ブラウザ：window
   Node.js：global
   
-  globalThis：適宜グローバルオブジェクトを返却するキーワード
+  globalThis：適宜グローバルオブジェクトを返却するキーワード（各環境でのグローバルオブジェクトを返却）
 
   クロスプラットフォームで動くコードは `Universal(Isomorphic) JavaScript` と呼ばれる
   例）React の CSR / SSR など
