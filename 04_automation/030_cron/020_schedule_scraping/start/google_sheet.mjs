@@ -6,7 +6,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const secrets = require('../../../google_secret.json');
 
-(async () => {
+async function addEmployeeToGS(){
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
 
   await doc.useServiceAccountAuth({
@@ -23,4 +23,6 @@ const secrets = require('../../../google_secret.json');
   rows.forEach(row => async() => {await row.save();
     
   });
-})();
+};
+
+export { addEmployeeToGS }
