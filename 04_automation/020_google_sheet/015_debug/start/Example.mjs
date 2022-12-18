@@ -3,7 +3,7 @@ import env from 'dotenv';
 env.config();
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const secrets = require('../../../google_secrets.json');
+const secrets = require('../../../google_secret.json');
 
 
 (async () => {

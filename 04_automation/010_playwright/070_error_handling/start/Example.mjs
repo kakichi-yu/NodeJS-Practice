@@ -7,8 +7,13 @@ import { chromium } from "@playwright/test";
 
   await page.waitForTimeout(2000);
 
-  const inputLocator = page.locator("//*[@id=\"__next\"]/div/div[1]/label/input");
-  await inputLocator.type('美');
+  try {
+    const inputLocator = page.locator("//*[@id=\"__next\"]/div/div[1]/label/input");
+    await inputLocator.type('美');
+  } catch (e) {
+    console.error("inputの入力処理で例外が発生しました", e)
+  }
+
 
   const pager3Locator = page.locator(".page-link.page-number >> nth=-1");
   await pager3Locator.click();
@@ -18,6 +23,6 @@ import { chromium } from "@playwright/test";
   const cardCount = await cardLocator.count();
   console.log(cardCount);
 
-  // await browser.close();
+  await browser.close();
 
 })();
