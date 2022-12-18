@@ -20,7 +20,7 @@ const secrets = require("../../../google_secret.json");
     await sheet.loadCells("A1:C4");
 
     const a1 = sheet.getCell(0,0);
-    // const b2 = sheet.getCellByA1("B5")
+    const b2 = sheet.getCellByA1("B2")
 
-    // console.log("b2", b2.value);
+    console.log("b2", b2.value);
 })();

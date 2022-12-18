@@ -3,7 +3,7 @@ import env from 'dotenv';
 env.config();
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const secrets = require('../../../google_secrets.json');
+const secrets = require('../../../google_secret.json');
 
 /**
  * 問題：
@@ -24,5 +24,39 @@ const secrets = require('../../../google_secrets.json');
   });
 
   await doc.loadInfo();
+
+  // await doc.addSheet({
+  //   title: "cart",
+  //   headerValues: ["name", "price"]
+  // })
+
+  const cartSheet = doc.sheetsByTitle["cart"];
+  // const rows = await cartSheet.addRows([
+  //   {
+  //     name: "Orange",
+  //     price: 120,
+  //   },
+  //   {
+  //     name: "Banana",
+  //     price: 50,
+  //   },
+  //   {
+  //     name: "Apple",
+  //     price: 100,
+  //   },
+  // ]);
+
+  const rows = await cartSheet.getRows();
+
+  let sumPrice = 0;
+  rows.forEach(elm => {
+    sumPrice += parseInt(elm.price);
+  });
+
+  const sumRow = await cartSheet.addRow({
+    name: "合計",
+    price: sumPrice
+    //price: "=sum(B2:B4)"
+  })
 
 })();

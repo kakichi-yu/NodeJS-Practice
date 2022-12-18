@@ -3,7 +3,7 @@ import env from 'dotenv';
 env.config();
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const secrets = require('../../../google_secrets.json');
+const secrets = require('../../../google_secret.json');
 
 
 (async () => {
@@ -17,13 +17,22 @@ const secrets = require('../../../google_secrets.json');
     await doc.loadInfo();
 
     const sheet = doc.sheetsByIndex[0];
-    await sheet.loadCells('A1:C4');
+    await sheet.loadCells('A1:C5');
 
     const a1 = sheet.getCell(0,0);
+    const a5 = sheet.getCell(4,0);
     const b1 = sheet.getCell(0,1);
     const b2 = sheet.getCellByA1('B2');
 
-    console.log('a1', a1.value);
-    console.log('b1', b1.value);
-    console.log('b2', b2.value);
+    // console.log('a1', a1.value);
+    // console.log('b1', b1.value);
+    // console.log('b2', b2.value);
+    console.log("a5", a5.textFormat);
+
+    // a1.value = 100;
+    // b1.value = 200;
+    // a5.value = '=sum(A1:A4)'
+    b1.textFormat = {fontSize: 18};
+
+    await sheet.saveUpdatedCells();
 })();
