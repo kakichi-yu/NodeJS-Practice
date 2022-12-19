@@ -1,30 +1,19 @@
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-dotenv.config();
+import cron from "node-cron";
+import { addEmployeeToGS } from "./google_sheet.mjs";
+import { sendEmail } from "./email.mjs";
 
-(async () => {
-  const message = {
-    from: process.env.EMAIL_FROM,
-    to: process.env.EMAIL_TO,
-    subject: 'メールの件名です',
-    text: `これはスクリプトによって送信されました。\n改行後`,
-  };
+cron.schedule("23 8 * * *", () => {
+    main();
+})
 
-  const smtpConfig = {
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // SSL
-    auth: {
-      user: process.env.EMAIL_FROM,
-      // googleアカウントのアプリパスワードを設定
-      // see https://support.google.com/accounts/answer/185833?hl=ja
-      pass: process.env.APP_PASS,
-    },
-  };
-
-  const transporter = nodemailer.createTransport(smtpConfig);
-
-  transporter.sendMail(message, function (err, response) {
-    console.log(err || response);
-  });
-})();
+async function main() {
+    const dt = new Date;
+    const dtStr = dt.toDateString();
+    const sheetURL = `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}`;
+    try {
+        await addEmployeeToGS();
+        sendEmail("処理が成功しました", `処理時刻：${dtStr} \n URL:`)
+    } catch (e) {
+        sendEmail("エラーが発生しました", `エラー発生時刻：${dtStr} \n ${e}`);
+    }
+}
