@@ -1,5 +1,5 @@
 const path = require('path');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 const mode = process.env.NODE_ENV || 'development';
@@ -38,16 +38,16 @@ module.exports = {
         test: /\.scss$/,
         include: path.resolve(__dirname, 'src/scss'),
         use: [
-          'style-loader',
-          // {
-          //   loader: MiniCssExtractPlugin.loader,
-          //   options: {
-          //     esModule: false,
-          //   },
-          // },
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
+          // 'style-loader', // 読み込んだCSSをstyleに出力する
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: false,
+            },
+          },
+          'css-loader', // CSSをJavaScriptから読み込む
+          'postcss-loader', // CSSに何らかの処理 
+          'sass-loader', // Sass→CSS(TS)
         ],
       },
       {
@@ -67,9 +67,9 @@ module.exports = {
     },
   },
   plugins: [
-    // new MiniCssExtractPlugin({
-    //   filename: './css/style.css',
-    // }),
+    new MiniCssExtractPlugin({
+      filename: './css/style.css',
+    }),
     new CopyPlugin({
       patterns: [
         { from: "index.html", to: "." },
