@@ -18,15 +18,26 @@ const app = express();
 
 app.use(express.json());
 
-// ミドルウェア：ルートハンドラの前後に行われる処理
+// ミドルウェア：ルートハンドラの前(後)に行われる処理
 app.use('/', function(req, res, next) {
-
+  console.log("/ start");
+  next("error");
 });
 
 // ルートハンドラ：パスとメソッドに紐付くメインの処理
-app.get('/', function(req, res) {
-
+// 1つのrouteHandlerに対し１つのゲットメソッド
+app.get('/', function(req, res, next) {
+  console.log("/ get")
 });
+
+//errorHandler
+app.use(function(error,req,res,next){
+  if(res.headersSent){
+    return;
+  }
+  res.json({ error: error });
+})
+
 app.listen(PORT, function () {
   console.log(`Server start: http://localhost:${PORT}`);
 });

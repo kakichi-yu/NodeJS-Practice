@@ -1,13 +1,13 @@
 import * as http from 'http';
-import express  from 'express';
+import express from 'express';
 
 const PORT = 8080;
 const app = express();
 
 // 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", function(req,res){
+app.get("/", function (req, res) {
   res.send(`
   <a href="/result?param1=1&param2=2">Get Method Link</a>
   <form action="/result" method="POST">
@@ -19,15 +19,16 @@ app.get("/", function(req,res){
   `)
 });
 
-app.get("/result", function(req,res){
+app.get("/result", function (req, res) {
   const params = req.query;
   console.log(params);
 });
 
-app.post("/result", function(req,res){
+app.post("/result", function (req, res) {
   const params = req.body;
   console.log(params);
 })
+
 
 app.listen(PORT, () => {
   console.log(`Server start: http://localhost:${PORT}`);

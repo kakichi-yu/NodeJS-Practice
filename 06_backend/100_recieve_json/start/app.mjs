@@ -31,7 +31,10 @@ app.get('/', function (req, res) {
           "content-type": "application/json"
         },
         body: JSON.stringify(data) 
-      })
+      }).then(async((res) => {
+        const data = await return res.json();
+        console.log(data)
+      }))
     }
     </script>
     `);
