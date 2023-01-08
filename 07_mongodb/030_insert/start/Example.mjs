@@ -17,6 +17,12 @@ async function getCollection() {
 insertBook();
 async function insertBook() {
   const col = await getCollection();
+  const result = await col.insertMany(
+    [
+      { title: "Hello", int: 10, bool: true, dt: new Date, arry: [0, 1, 2] }
+    ]
+  )
+  console.log(col);
 
   await client.close();
 }
