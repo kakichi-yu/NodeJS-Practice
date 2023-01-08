@@ -10,7 +10,7 @@ async function getCollection() {
     const db = client.db('bookshelf');
     return db.collection('books');
   } catch {
-    // await client.close();
+    await client.close();
   }
 }
 // クエリ
@@ -21,9 +21,11 @@ getAllBooks();
 async function getAllBooks() {
   const col = await getCollection();
   debugger;
-  let cursor = col.find();
+  // let cursor = col.find({ $or: [{ rating: 3 }, { title: "潮騒" }] });
+  // let cursor = col.find({ _id: new ObjectId("63566ef3c58f15f29410dc90") })
+  let cursor = col.find({ rating: { $gt: 2, $lte: 5 } }).sort({ rating: 1 })
   const result = await cursor.toArray();
   console.log(result);
 
-//   await client.close();
+  await client.close();
 }
