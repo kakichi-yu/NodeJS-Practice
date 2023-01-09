@@ -17,6 +17,8 @@ async function getCollection() {
 updateBook();
 async function updateBook() {
   const col = await getCollection();
-
+  await col.updateMany(
+    { title: "バックエンド開発" }, { $set: { rating: 3 } },
+  );
   await client.close();
 }
