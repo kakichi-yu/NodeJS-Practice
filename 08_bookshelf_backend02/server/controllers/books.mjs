@@ -1,6 +1,26 @@
 import { validationResult } from "express-validator"
 import Book from "../models/book.mjs"
 
+async function getAllBooks(req, res) {
+    const books = await Book.find();
+    res.json(books)
+}
+
+async function getBookById(req, res) {
+    const _id = req.params.id
+    const book = await Book.findById(_id)
+
+    if (book == null) return res.status(404).json({ msg: "Page Not Found" })
+    res.json(book)
+}
+
+async function deleteBook(req, res) {
+    const _id = req.params.id
+    const { deletedCount } = await Book.deleteOne({ _id });
+    if (deletedCount < 1) return res.status(404).json({ msg: "Target Book Not Found" })
+    res.json({ msg: "Delete succeeded." })
+}
+
 async function registBook(req, res) {
     const errors = validationResult(req)
 
@@ -13,4 +33,24 @@ async function registBook(req, res) {
     res.status(201).json(newBook)
 }
 
-export { registBook }
+async function updateBook(req, res) {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        const errs = errors.array()
+        return res.status(400).json(errs)
+    }
+
+    const { title, description, comment, rating } = req.body;
+    const _id = req.params.id
+    const book = await Book.findById(_id);
+    if (book == null) return res.status(404).json({ msg: "Page Not Found" })
+    if (title != undefined) book.title = title;
+    if (description != undefined) book.description = description
+    if (comment != undefined) book.comment = comment;
+    if (rating != undefined) book.rating = rating;
+    await book.save();
+    res.json(book)
+}
+
+export { registBook, updateBook, getAllBooks, getBookById, deleteBook }
