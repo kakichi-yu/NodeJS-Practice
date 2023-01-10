@@ -2,7 +2,7 @@
 
 require('mocha');
 const assert = require('assert');
-const isOdd = require('./');
+const isOdd = require('.');
 
 describe('isOdd', function() {
   it('should return true if the number is odd:', function() {

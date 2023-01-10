@@ -1,4 +1,4 @@
-import { connect, Schema, model, Mixed } from 'mongoose';
+import mongoose, { connect, Schema, model, Mixed } from 'mongoose';
 import env from 'dotenv';
 env.config();
 
@@ -17,28 +17,39 @@ Schema: 他のスキーマ
  */
 connect(process.env.MONGO_URI);
 
-const catSchema = new Schema({
-  name: { type: String, required: true },
-  size: { type: Number, required: true, enum: [0,1] },
-  bool: { type: Boolean, default: false, alias: 'b' },
+const bookSchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true, },
+  rating: { type: Number, required: true, enum: [1, 2, 3, 4, 5] },
+  comment: { type: String, required: true },
   dt: {
     type: Date,
     set: function (newVal) {
       return new Date(newVal);
     },
-    get: function(val) {
-        return val instanceof Date ? val : new Date(val)
+    get: function (val) {
+      return val instanceof Date ? val : new Date(val)
     }
   },
-  arry: [ String ],
+  arry: [String],
   anything: Mixed,
+}, { timestamps: true });
+const Book = model('Book', bookSchema);
+
+const books = new Book();
+books.title = 'Zildjian';
+books.description = "description";
+books.rating = "5";
+books.comment = "comment";
+
+books.save().then((doc) => {
+  console.log(doc._id)
+  mongoose.connection.close();
 });
-const Cat = model('Cat', catSchema);
 
-const kitty = new Cat();
-kitty.name = 'Zildjian';
-kitty.size = 1;
-kitty.arry = [0,1];
-kitty.dt = "2017/12/21";
-
-kitty.save().then((doc) => console.log(doc.b));
+// await init();
+// async function init() {
+//   const registerdBook = await book.save();
+//   console.log(registerdBook._id);
+//   mongoose.connection.close();
+// }

@@ -15,12 +15,12 @@ module.exports = {
   module: {
     rules: [
       {
-        enforce: 'pre',
+        enforce: 'pre', // これを先に読み込む
         test: /\.m?js$/, // .mjs, .js
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
-          fix: true,
+          fix: true, // コード成型の有無
         },
       },
       {

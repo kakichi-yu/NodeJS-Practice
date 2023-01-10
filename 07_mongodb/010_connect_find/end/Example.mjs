@@ -6,12 +6,12 @@ const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, u
 
 async function getCollection() {
   try {
-    console.log(client)
+    // console.log(client)
     await client.connect();
     const db = client.db('bookshelf');
     return db.collection('books');
   } catch {
-    // await client.close();
+    await client.close();
   }
 }
 
@@ -19,9 +19,9 @@ getAllBooks();
 async function getAllBooks() {
   const col = await getCollection();
   console.log(col);
-  // const cursor = col.find();
-  // const result = await cursor.toArray();
-  // console.log(result);
+  const cursor = col.find();
+  const result = await cursor.toArray();
+  console.log(result);
 
-//   await client.close();
+  await client.close();
 }
