@@ -70,6 +70,7 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "scripts": {
+    "start": "node server/app.mjs",
     "dev": "concurrently \"npm:dev:api\" \"npm:dev:client\" ",
     "dev2": "run-p dev:*",
     "dev:api": "nodemon ./server/app.mjs",
