@@ -1,8 +1,8 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron')
 const path = require('path')
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -41,3 +41,63 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const { chromium } = require("@playwright/test");
+const download = require("image-downloader");
+const chromePath = require("chrome-paths")
+let imgUrls;
+
+async function fetchImgs(event, targetUrl) {
+  const browser = await chromium.launch({ headless: false, slowMo: 500, executablePath: chromePath.chrome });
+  const page = await browser.newPage();
+  await page.goto(targetUrl);
+  const imgLocators = page.locator("img");
+  const imgCount = await imgLocators.count();
+
+  imgUrls = [];
+  for (let i = 0; i < imgCount; i++) {
+    const imgLocator = imgLocators.locator(`nth=${i}`)
+    const imgSrc = await imgLocator.evaluate(node => node.currentSrc);
+    imgUrls.push(imgSrc);
+  }
+
+  await browser.close();
+  return imgUrls;
+}
+
+async function saveImgs() {
+  const win = BrowserWindow.getFocusedWindow();
+  const pathResult = await dialog.showOpenDialog(win, {
+    properties: [`openDirectory`],
+    defaultPath: "."
+  })
+
+  if (pathResult.canceled) return "cancel";
+
+  const dest = pathResult.filePaths[0];
+
+  try {
+    for (const url of imgUrls) {
+      await download.image({
+        url,
+        dest
+      }).then((result) => {
+        console.log("success : ", result)
+      })
+        .catch((e) => {
+          console.error("error occured : ", e)
+        })
+    }
+  } catch (e) {
+    return "failed"
+  }
+
+  setTimeout(() => {
+    shell.openPath(dest);
+  }, 2000)
+
+  return "success"
+}
+
+ipcMain.handle("fetchImgs", fetchImgs);
+ipcMain.handle("saveImgs", saveImgs);

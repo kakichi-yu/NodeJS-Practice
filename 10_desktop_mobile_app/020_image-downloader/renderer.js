@@ -13,12 +13,13 @@ const img = document.querySelectorAll("img");
 const msg = document.getElementById("msg");
 const result = document.getElementById("result");
 
-getBtn.addEventListener("click", () => {
+getBtn.addEventListener("click", async () => {
 
     const targetUrl = inputUrl.value;
 
-    const imgUrls = ["http://localhost:3000/villa-1.jpg", "http://localhost:3000/villa-2.jpg"];
+    const imgUrls = await window.imgDl.fetchImgs(targetUrl);
 
+    console.log(imgUrls)
     let imgHtmlStr = ""
     imgUrls.forEach(imgUrl => {
         imgHtmlStr += `<img src="${imgUrl}" />`
@@ -26,13 +27,14 @@ getBtn.addEventListener("click", () => {
     result.innerHTML = imgHtmlStr;
 })
 
-saveBtn.addEventListener("click", () => {
-    const result = "success";
+saveBtn.addEventListener("click", async () => {
+    const result = await window.imgDl.saveImgs();
     const MSGs = {
         "success": "保存に成功しました",
         "failed": "失敗しました",
         "cancel": "中断しました"
     };
+    console.log(result);
 
     msg.textContent = MSGs[result]
 })
